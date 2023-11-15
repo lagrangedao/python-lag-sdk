@@ -39,20 +39,20 @@ class APIClient(object):
         if method == c.GET:
             response = requests.get(url, headers=header)
         elif method == c.PUT:
-            body = json.dumps(params)
+            # body = json.dumps(params)
             response = requests.put(url, data=body, headers=header)
         elif method == c.POST:
-            header["Content-Type"] = "application/json"
+            # header["Content-Type"] = "application/json"
             if files:
                 body = params
                 response = requests.post(
                     url, data=body, headers=header, files=files)
             else:
-                body = json.dumps(params) if method == c.POST else ""
+                # body = json.dumps(params) if method == c.POST else ""
                 response = requests.post(url, data=body, headers=header)
         elif method == c.DELETE:
             if params:
-                body = json.dumps(params)
+                # body = json.dumps(params)
                 response = requests.delete(url, data=body, headers=header)
             else:
                 response = requests.delete(url, headers=header)
