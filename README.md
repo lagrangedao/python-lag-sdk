@@ -7,25 +7,22 @@ A brief description of what `python-lag-sdk` is and its purpose. This section sh
 Instructions on how to install the `python-lag-sdk`. This will typically include steps to clone the repository, navigate to the project directory, and any commands to run, such as `pip install` if it's a Python package.
 
 ```bash
-git clone [repository-url]
-cd python-lag-sdk
-pip install -r requirements.txt
+pip install -i https://test.pypi.org/simple/ lag-sdk==0.4.3
 ```
 
 ## Usage
 Examples and code snippets showing how to use `python-lag-sdk`. This could include basic usage examples, initializing the SDK, making API calls, or other relevant use cases.
 
-IMPORTANT, in the same directory as the sdk, ensure you have a .env file with 
-```python
-mumbai_rpc = "<YOUR_MUMBAI_RPC">
-```
+IMPORTANT, You should be able to get your private key from Metamask -> Account Details -> show private key
+
+THESE COMMANDS SHOULD BE RUN SEPERATELY, to allow for time in between them.
 
 ```python
 # Example Python code showing how to use python-lag-sdk
 from swan_lag.api_client import APIClient
 from swan_lag.api.lag_client import LagAPI
 
-api_client = APIClient("GnWAOmfnNa", <"YOUR_PRIVATE_KEY">True, True)
+api_client = APIClient("GnWAOmfnNa", <"YOUR_PRIVATE_KEY">, "<YOUR_MUMBAI_RPC>",True, True)
 lag_client = LagAPI(api_client)
 
 #Workflow for creating a SpaceNFT:
