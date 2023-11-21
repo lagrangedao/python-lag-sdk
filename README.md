@@ -22,7 +22,7 @@ THESE COMMANDS SHOULD BE RUN SEPERATELY, to allow for time in between them.
 from swan_lag.api_client import APIClient
 from swan_lag.api.lag_client import LagAPI
 
-api_client = APIClient("GnWAOmfnNa", <"YOUR_PRIVATE_KEY">, "<YOUR_MUMBAI_RPC>",True, True)
+api_client = APIClient("<YOUR_LAGRANGE_API_KEY>", <"YOUR_PRIVATE_KEY">, "<YOUR_MUMBAI_RPC>",True, True)
 lag_client = LagAPI(api_client)
 
 #Workflow for creating a SpaceNFT:
