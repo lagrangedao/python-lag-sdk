@@ -4,16 +4,18 @@ import json
 import requests
 from swan_lag.common import utils
 from swan_lag.common import constants as c
-
+from web3 import HTTPProvider, Web3, Account
 
 class APIClient(object):
-    def __init__(self, api_key, is_testnet=False, login=True):
+    def __init__(self, api_key, private_key,is_testnet=False, login=True):
         self.token = None
         self.api_key = api_key
         self.is_testnet = is_testnet
         self.LAG_API = Params(self.is_testnet).LAG_API
+        self.account = Account.from_key(private_key)
         if login:
             self.api_key_login()
+
 
     def api_key_login(self):
         params = {'api_key': self.api_key}
