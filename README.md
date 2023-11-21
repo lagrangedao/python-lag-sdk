@@ -15,21 +15,34 @@ pip install -r requirements.txt
 ## Usage
 Examples and code snippets showing how to use `python-lag-sdk`. This could include basic usage examples, initializing the SDK, making API calls, or other relevant use cases.
 
+IMPORTANT, in the same directory as the sdk, ensure you have a .env file with 
+```python
+mumbai_rpc = "<YOUR_MUMBAI_RPC">
+```
+
 ```python
 # Example Python code showing how to use python-lag-sdk
 from swan_lag.api_client import APIClient
 from swan_lag.api.lag_client import LagAPI
 
-
-api_client = APIClient("GnWAOmfnNa",True, True)
+api_client = APIClient("GnWAOmfnNa", <"YOUR_PRIVATE_KEY">True, True)
 lag_client = LagAPI(api_client)
-#Examples:
-res = lag_client.data_nft_request(tx_hash,chain_id,wallet_address,space_name)
-res = lag_client.data_nft_request_status(wallet_address,space_name)
-res = lag_client.create_space_license(tx_hash,contract_address,chain_id,recipient,ipfs_uri)
-res = lag_client.copy_nft_request(tx_hash,contract_address,chain_id,recipient,ipfs_uri)
-res = lag_client.copy_nft_request_status(tx_hash,chain_id,wallet_address,space_name)
 
+#Workflow for creating a SpaceNFT:
+#This creates a request for the contract to create an NFT, this returns the tx_hash for requesting the nft
+res = lag_client.space_nft_request(chain_id,wallet_address,space_name)
+#This attempts to claim the space nft and if it is not possible it fails, this returns the tx_hash for claiming the nft, as well as the contract address for the nft
+res = lag_client.try_claim_space_nft(wallet_address,space_name)
+#Once the nft is claimed, we should be able to view it on the chain, which this function allows for. This function returns info in the form of a dictionary
+res = lag_client.get_space_nft_info(wallet_address,space_name)
+#Once the Nft is created, we should be able to create a license. Recipient is usually going to be the same as wallet_address. Contract address comes from try_claim_space_nft
+res = lag_client.create_space_license(wallet_address,space_name,contract_address,chain_id,recipient)
+
+#Workflow for creating a dataNFT, similar return values as SpaceNFT:
+res = lag_client.data_nft_request(chain_id,wallet_address,space_name)
+res = lag_client.try_claim_data_nft(wallet_address,space_name)
+res = lag_client.get_data_nft_info(wallet_address,space_name)
+res = lag_client.create_dataset_license(wallet_address,space_name,contract_address,chain_id,recipient)
 
 ```
 
