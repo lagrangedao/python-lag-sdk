@@ -1,8 +1,8 @@
-from api_client import APIClient
-from common.constants import *
+from swan_lag.api_client import APIClient
+from swan_lag.common.constants import *
 import logging
 import requests,time,json
-from service import lag_service
+from swan_lag.service.lag_service import *
 from flask import jsonify
 
 class LagAPI(object):
@@ -14,10 +14,11 @@ class LagAPI(object):
         #TODO: once authentication added we can modify this
         self.token = self.api_client.token
         self.account = self.api_client.account
+        self.rpc = self.api_client.rpc
         #self.token = None
 
     def space_nft_request(self,chain_id, wallet_address,space_name):
-        request_id, tx_hash = lag_service.request_data_nft(self.account,space_name)
+        request_id, tx_hash = request_data_nft(self.account,space_name,self.rpc)
         time.sleep(10)
         params = {
             "tx_hash": tx_hash,
@@ -33,12 +34,12 @@ class LagAPI(object):
             return None
         
     def try_claim_space_nft(self, wallet_address, space_name):
-        data = lag_service.check_request_status(wallet_address,space_name)
+        data = check_request_status(wallet_address,space_name,self.rpc)
         if data["fulfilled"] is False or data["claimable"] is False:
             logging.info("SpaceNFT is not claimable")
             return {"message":"SpaceNFT is not claimable", "status": "Failed"}
     
-        contract_address,tx_hash = lag_service.claim_data_nft(self.account,space_name)
+        contract_address,tx_hash = claim_data_nft(self.account,space_name,self.rpc)
         
         data = {
             "tx_hash": tx_hash,
@@ -100,7 +101,7 @@ class LagAPI(object):
         ipfs_uri = data["ipfs_url"]
         gateway = data["gateway"]
         metadata_cid = data["metadata_cid"]
-        tx_hash = lag_service.create_license(self.account,contract_address,recipient,ipfs_uri)
+        tx_hash = create_license(self.account,contract_address,recipient,ipfs_uri,self.rpc)
         headers = {
             "Authorization": "Bearer " + self.token,
         }
@@ -130,7 +131,7 @@ class LagAPI(object):
         
 
     def data_nft_request(self,chain_id, wallet_address,dataset_name):
-        request_id, tx_hash = lag_service.request_data_nft(self.account,dataset_name)
+        request_id, tx_hash = request_data_nft(self.account,dataset_name,self.rpc)
         params = {
             "tx_hash": tx_hash,
             "chain_id": chain_id,
@@ -146,12 +147,12 @@ class LagAPI(object):
         
     def try_claim_data_nft(self, wallet_address, dataset_name):
 
-        data = lag_service.check_request_status(wallet_address,dataset_name)
+        data = check_request_status(wallet_address,dataset_name,self.rpc)
         if data["fulfilled"] is False or data["claimable"] is False:
             logging.info("DataNFT is not claimable")
             return {"message":"DataNFT is not claimable", "status": "Failed"}
     
-        contract_address,tx_hash = lag_service.claim_data_nft(self.account,dataset_name)
+        contract_address,tx_hash = claim_data_nft(self.account,dataset_name,self.rpc)
         data = {
             "tx_hash": tx_hash,
             "chain_id": 80001
@@ -214,7 +215,7 @@ class LagAPI(object):
         ipfs_uri = data["ipfs_url"]
         gateway = data["gateway"]
         metadata_cid = data["metadata_cid"]
-        tx_hash = lag_service.create_license(self.account,contract_address,recipient,ipfs_uri)
+        tx_hash = create_license(self.account,contract_address,recipient,ipfs_uri,self.rpc)
         headers = {
             "Authorization": "Bearer " + self.token,
         }

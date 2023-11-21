@@ -7,12 +7,13 @@ from swan_lag.common import constants as c
 from web3 import HTTPProvider, Web3, Account
 
 class APIClient(object):
-    def __init__(self, api_key, private_key,is_testnet=False, login=True):
+    def __init__(self, api_key, private_key,rpc,is_testnet=False, login=True):
         self.token = None
         self.api_key = api_key
         self.is_testnet = is_testnet
         self.LAG_API = Params(self.is_testnet).LAG_API
         self.account = Account.from_key(private_key)
+        self.rpc = rpc
         if login:
             self.api_key_login()
 

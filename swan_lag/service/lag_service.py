@@ -3,13 +3,8 @@ from web3.middleware import geth_poa_middleware
 from web3.logs import DISCARD
 import os
 import logging
-from dotenv import load_dotenv
-load_dotenv()
-rpc = os.getenv("mumbai_rpc")
 
 # connect to RPC
-web3 = Web3(Web3.HTTPProvider(rpc))
-web3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
 # token for this ex does not need whole abi, just the approve function
 approve_abi = '''[{
@@ -36,12 +31,10 @@ approve_abi = '''[{
       "stateMutability": "nonpayable",
       "type": "function"
     }]'''
-mumbai_usdc_address = '0x1da5E8c36dc967bE47C55C600b79220F191B1202'
-mumbai_usdc_contract = web3.eth.contract(address=mumbai_usdc_address, abi=approve_abi)
+
 nft_abi= '[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"id","type":"bytes32"}],"name":"ChainlinkCancelled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"id","type":"bytes32"}],"name":"ChainlinkFulfilled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"id","type":"bytes32"}],"name":"ChainlinkRequested","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":false,"internalType":"string","name":"datasetName","type":"string"},{"indexed":false,"internalType":"address","name":"dataNFTAddress","type":"address"}],"name":"CreateDataNFT","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"requestId","type":"bytes32"},{"indexed":false,"internalType":"string","name":"uri","type":"string"}],"name":"OracleResult","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"address","name":"_address","type":"address"}],"name":"addressToString","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"},{"inputs":[],"name":"baseUrl","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"enum DataNFTFactoryConsumer.RequestType","name":"requestType","type":"uint8"},{"internalType":"string","name":"datasetName","type":"string"}],"name":"claimDataNFT","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"a","type":"string"},{"internalType":"string","name":"b","type":"string"}],"name":"concat","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"enum DataNFTFactoryConsumer.RequestType","name":"","type":"uint8"},{"internalType":"address","name":"","type":"address"},{"internalType":"string","name":"","type":"string"}],"name":"dataNFTAddresses","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"fee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"requestId","type":"bytes32"},{"internalType":"bytes","name":"uriBytes","type":"bytes"}],"name":"fulfill","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getOracle","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"idToArgs","outputs":[{"internalType":"enum DataNFTFactoryConsumer.RequestType","name":"requestType","type":"uint8"},{"internalType":"address","name":"requestor","type":"address"},{"internalType":"string","name":"assetName","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"jobId","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"enum DataNFTFactoryConsumer.RequestType","name":"","type":"uint8"},{"internalType":"address","name":"","type":"address"},{"internalType":"string","name":"","type":"string"}],"name":"requestData","outputs":[{"internalType":"address","name":"requestor","type":"address"},{"internalType":"string","name":"datasetName","type":"string"},{"internalType":"string","name":"uri","type":"string"},{"internalType":"bool","name":"fulfilled","type":"bool"},{"internalType":"bool","name":"claimable","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"enum DataNFTFactoryConsumer.RequestType","name":"requestType","type":"uint8"},{"internalType":"string","name":"datasetName","type":"string"}],"name":"requestDataNFT","outputs":[{"internalType":"bytes32","name":"requestId","type":"bytes32"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"url","type":"string"}],"name":"setBaseUrl","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_fee","type":"uint256"}],"name":"setFee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"job","type":"bytes32"}],"name":"setJobId","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"setLinkToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"oracle","type":"address"}],"name":"setOracleAddress","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"newPath","type":"string"}],"name":"setPath","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"targetPath","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"tokenAddress","type":"address"}],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"withdrawLink","outputs":[],"stateMutability":"nonpayable","type":"function"}]'
 # nft_factory_abi = '''[{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"id","type":"bytes32"}],"name":"ChainlinkCancelled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"id","type":"bytes32"}],"name":"ChainlinkFulfilled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"id","type":"bytes32"}],"name":"ChainlinkRequested","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":false,"internalType":"string","name":"datasetName","type":"string"},{"indexed":false,"internalType":"address","name":"dataNFTAddress","type":"address"}],"name":"CreateDataNFT","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"requestId","type":"bytes32"},{"indexed":false,"internalType":"string","name":"uri","type":"string"}],"name":"OracleResult","type":"event"},{"inputs":[{"internalType":"enum DataNFTFactoryConsumer.RequestType","name":"requestType","type":"uint8"},{"internalType":"string","name":"datasetName","type":"string"}],"name":"requestDataNFT","outputs":[{"internalType":"bytes32","name":"requestId","type":"bytes32"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"enum DataNFTFactoryConsumer.RequestType","name":"","type":"uint8"},{"internalType":"address","name":"","type":"address"},{"internalType":"string","name":"","type":"string"}],"name":"requestData","outputs":[{"internalType":"address","name":"requestor","type":"address"},{"internalType":"string","name":"datasetName","type":"string"},{"internalType":"string","name":"uri","type":"string"},{"internalType":"bool","name":"fulfilled","type":"bool"},{"internalType":"bool","name":"claimable","type":"bool"}],"stateMutability":"view","type":"function"}]'''
-mumbai_nft_factory_address = '0xcE9b3df9c3F5bEd0f84f1B3B1ab78568E7fEFF5A'
-mumbai_nft_factory_contract = web3.eth.contract(address=mumbai_nft_factory_address, abi=nft_abi)
+
 
 data_nft_abi = '''[
   {
@@ -112,8 +105,24 @@ data_nft_abi = '''[
 #     print('Transaction successful with transaction hash:', tx_hash.hex())
 #     print('Gas used:', txn_receipt['gasUsed'])
 
-def build_tx_config(account):
+def get_web3(rpc):
+    
+  web3 = Web3(Web3.HTTPProvider(rpc))
+  web3.middleware_onion.inject(geth_poa_middleware, layer=0)
+  return web3
 
+def get_factory(web3):
+  mumbai_nft_factory_address = '0xcE9b3df9c3F5bEd0f84f1B3B1ab78568E7fEFF5A'
+  mumbai_nft_factory_contract = web3.eth.contract(address=mumbai_nft_factory_address, abi=nft_abi)
+  return mumbai_nft_factory_contract
+
+def get_payment(web3):
+  mumbai_usdc_address = '0x1da5E8c36dc967bE47C55C600b79220F191B1202'
+  mumbai_usdc_contract = web3.eth.contract(address=mumbai_usdc_address, abi=approve_abi)
+  return mumbai_usdc_contract
+
+def build_tx_config(account,rpc):
+    web3 = get_web3(rpc)
     nonce = web3.eth.getTransactionCount(account.address)
     tx_config = {
         'from': account.address,
@@ -123,8 +132,10 @@ def build_tx_config(account):
 
     return tx_config
 
-def approve_spending_on_mumbai(account,spender, amount):
-    tx_config = build_tx_config(account)
+def approve_spending_on_mumbai(account,spender, amount, rpc):
+    web3 = get_web3(rpc)
+    mumbai_usdc_contract = get_payment(web3)
+    tx_config = build_tx_config(account,rpc)
 
     tx = mumbai_usdc_contract.functions.approve(spender, amount).build_transaction(tx_config)
     signed_tx = account.signTransaction(tx)
@@ -132,8 +143,10 @@ def approve_spending_on_mumbai(account,spender, amount):
     web3.eth.send_raw_transaction(signed_tx.rawTransaction)
 
 
-def request_data_nft(account,space_name):
-    tx_config = build_tx_config(account)
+def request_data_nft(account,space_name, rpc):
+    web3 = get_web3(rpc)
+    mumbai_nft_factory_contract = get_factory(web3)
+    tx_config = build_tx_config(account,rpc)
 
     tx = mumbai_nft_factory_contract.functions.requestDataNFT(1, space_name).buildTransaction(tx_config)
     signed_tx = account.signTransaction(tx)
@@ -154,7 +167,9 @@ def request_data_nft(account,space_name):
     print('Chainlink request id: 0x', request_id)
     return(request_id,tx_hash.hex())
 
-def check_request_status(wallet_address, space_name):
+def check_request_status(wallet_address, space_name, rpc):
+    web3 = get_web3(rpc)
+    mumbai_nft_factory_contract = get_factory(web3)
 
     request_data = mumbai_nft_factory_contract.functions.requestData(1, wallet_address, space_name).call()
 
@@ -173,8 +188,10 @@ def check_request_status(wallet_address, space_name):
 
     return data
 
-def claim_data_nft(account,space_name):
-    tx_config = build_tx_config(account)
+def claim_data_nft(account,space_name, rpc):
+    web3 = get_web3(rpc)
+    mumbai_nft_factory_contract = get_factory(web3)
+    tx_config = build_tx_config(account,rpc)
 
     tx = mumbai_nft_factory_contract.functions.claimDataNFT(1, space_name).buildTransaction(tx_config)
     signed_tx = account.signTransaction(tx)
@@ -195,12 +212,13 @@ def claim_data_nft(account,space_name):
     return (data_nft_contract_address,tx_hash.hex())
 
 
-def create_license(account,data_nft_contract, recipient, license_uri):
+def create_license(account,data_nft_contract, recipient, license_uri, rpc):
+    web3 = get_web3(rpc)
     data_nft_address = data_nft_contract
     data_nft_contract = web3.eth.contract(address=data_nft_address, abi=data_nft_abi)
 
     ## need to upload license info to IPFS to get uri
-    tx_config = build_tx_config(account)
+    tx_config = build_tx_config(account,rpc)
 
     tx = data_nft_contract.functions.createLicense(recipient, license_uri).buildTransaction(tx_config)
     signed_tx = account.signTransaction(tx)
