@@ -278,3 +278,12 @@ class LagAPI(object):
         except:
             logging.error("An error occurred while executing send_jobs()")
             return None
+        
+    def get_result_uri_from_space_uuid(self,space_uuid):
+        url = '/get_job_uri/'+ space_uuid
+        try:
+            response = self.api_client._request_without_params(GET,url,self.api_client.LAG_API,self.token)
+            return response
+        except:
+            logging.error("An error occurred while executing get_result_uri_from_space_uuid()")
+            return None

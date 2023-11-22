@@ -41,6 +41,9 @@ res = lag_client.try_claim_data_nft(wallet_address,space_name)
 res = lag_client.get_data_nft_info(wallet_address,space_name)
 res = lag_client.create_dataset_license(wallet_address,space_name,contract_address,chain_id,recipient)
 
+#Get_job_uri
+res = lag_client.get_result_uri_from_space_uuid(space_uuid)
+
 ```
 
 ## Contributing
