@@ -1,8 +1,8 @@
-from swan_lag.api_client import APIClient
-from swan_lag.common.constants import *
+from api_client import APIClient
+from common.constants import *
 import logging
 import requests,time,json
-from swan_lag.service.lag_service import *
+from service.lag_service import *
 from flask import jsonify
 
 class LagAPI(object):
@@ -18,7 +18,7 @@ class LagAPI(object):
         #self.token = None
 
     def space_nft_request(self,chain_id, wallet_address,space_name):
-        request_id, tx_hash = request_data_nft(self.account,space_name,self.rpc)
+        request_id, tx_hash = request_data_nft(self.account,space_name,self.rpc,1)
         time.sleep(10)
         params = {
             "tx_hash": tx_hash,
@@ -34,12 +34,12 @@ class LagAPI(object):
             return None
         
     def try_claim_space_nft(self, wallet_address, space_name):
-        data = check_request_status(wallet_address,space_name,self.rpc)
+        data = check_request_status(wallet_address,space_name,self.rpc, 1)
         if data["fulfilled"] is False or data["claimable"] is False:
             logging.info("SpaceNFT is not claimable")
             return {"message":"SpaceNFT is not claimable", "status": "Failed"}
     
-        contract_address,tx_hash = claim_data_nft(self.account,space_name,self.rpc)
+        contract_address,tx_hash = claim_data_nft(self.account,space_name,self.rpc, 1)
         
         data = {
             "tx_hash": tx_hash,
@@ -131,7 +131,7 @@ class LagAPI(object):
         
 
     def data_nft_request(self,chain_id, wallet_address,dataset_name):
-        request_id, tx_hash = request_data_nft(self.account,dataset_name,self.rpc)
+        request_id, tx_hash = request_data_nft(self.account,dataset_name,self.rpc,0)
         params = {
             "tx_hash": tx_hash,
             "chain_id": chain_id,
@@ -147,12 +147,12 @@ class LagAPI(object):
         
     def try_claim_data_nft(self, wallet_address, dataset_name):
 
-        data = check_request_status(wallet_address,dataset_name,self.rpc)
+        data = check_request_status(wallet_address,dataset_name,self.rpc,0)
         if data["fulfilled"] is False or data["claimable"] is False:
             logging.info("DataNFT is not claimable")
             return {"message":"DataNFT is not claimable", "status": "Failed"}
     
-        contract_address,tx_hash = claim_data_nft(self.account,dataset_name,self.rpc)
+        contract_address,tx_hash = claim_data_nft(self.account,dataset_name,self.rpc,0)
         data = {
             "tx_hash": tx_hash,
             "chain_id": 80001

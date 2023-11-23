@@ -143,12 +143,12 @@ def approve_spending_on_mumbai(account,spender, amount, rpc):
     web3.eth.send_raw_transaction(signed_tx.rawTransaction)
 
 
-def request_data_nft(account,space_name, rpc):
+def request_data_nft(account,space_name, rpc, isSpace):
     web3 = get_web3(rpc)
     mumbai_nft_factory_contract = get_factory(web3)
     tx_config = build_tx_config(account,rpc)
 
-    tx = mumbai_nft_factory_contract.functions.requestDataNFT(1, space_name).buildTransaction(tx_config)
+    tx = mumbai_nft_factory_contract.functions.requestDataNFT(isSpace, space_name).buildTransaction(tx_config)
     signed_tx = account.signTransaction(tx)
     print(tx)
     tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)
@@ -167,11 +167,11 @@ def request_data_nft(account,space_name, rpc):
     print('Chainlink request id: 0x', request_id)
     return(request_id,tx_hash.hex())
 
-def check_request_status(wallet_address, space_name, rpc):
+def check_request_status(wallet_address, space_name, rpc,isSpace):
     web3 = get_web3(rpc)
     mumbai_nft_factory_contract = get_factory(web3)
 
-    request_data = mumbai_nft_factory_contract.functions.requestData(1, wallet_address, space_name).call()
+    request_data = mumbai_nft_factory_contract.functions.requestData(isSpace, wallet_address, space_name).call()
 
     # fulfilled true means the oracle has processed this request
     # claimable true means  the request was successful
@@ -188,12 +188,12 @@ def check_request_status(wallet_address, space_name, rpc):
 
     return data
 
-def claim_data_nft(account,space_name, rpc):
+def claim_data_nft(account,space_name, rpc,isSpace):
     web3 = get_web3(rpc)
     mumbai_nft_factory_contract = get_factory(web3)
     tx_config = build_tx_config(account,rpc)
 
-    tx = mumbai_nft_factory_contract.functions.claimDataNFT(1, space_name).buildTransaction(tx_config)
+    tx = mumbai_nft_factory_contract.functions.claimDataNFT(isSpace, space_name).buildTransaction(tx_config)
     signed_tx = account.signTransaction(tx)
 
     tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)
