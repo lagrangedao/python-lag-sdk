@@ -1,8 +1,8 @@
-from api_client import APIClient
-from common.constants import *
+from swan_lag.api_client import APIClient
+from swan_lag.common.constants import *
 import logging
 import requests,time,json
-from service.lag_service import *
+from swan_lag.service.lag_service import *
 from flask import jsonify
 
 class LagAPI(object):
