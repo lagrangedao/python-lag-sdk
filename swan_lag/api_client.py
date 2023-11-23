@@ -4,16 +4,19 @@ import json
 import requests
 from swan_lag.common import utils
 from swan_lag.common import constants as c
-
+from web3 import HTTPProvider, Web3, Account
 
 class APIClient(object):
-    def __init__(self, api_key, is_testnet=False, login=True):
+    def __init__(self, api_key, private_key,rpc,is_testnet=False, login=True):
         self.token = None
         self.api_key = api_key
         self.is_testnet = is_testnet
         self.LAG_API = Params(self.is_testnet).LAG_API
+        self.account = Account.from_key(private_key)
+        self.rpc = rpc
         if login:
             self.api_key_login()
+
 
     def api_key_login(self):
         params = {'api_key': self.api_key}
@@ -39,21 +42,21 @@ class APIClient(object):
         if method == c.GET:
             response = requests.get(url, headers=header)
         elif method == c.PUT:
-            body = json.dumps(params)
-            response = requests.put(url, data=body, headers=header)
+            # body = json.dumps(params)
+            response = requests.put(url, data=params, headers=header)
         elif method == c.POST:
-            header["Content-Type"] = "application/json"
+            # header["Content-Type"] = "application/json"
             if files:
                 body = params
                 response = requests.post(
                     url, data=body, headers=header, files=files)
             else:
-                body = json.dumps(params) if method == c.POST else ""
-                response = requests.post(url, data=body, headers=header)
+                # body = json.dumps(params) if method == c.POST else ""
+                response = requests.post(url, data=params, headers=header)
         elif method == c.DELETE:
             if params:
-                body = json.dumps(params)
-                response = requests.delete(url, data=body, headers=header)
+                # body = json.dumps(params)
+                response = requests.delete(url, data=params, headers=header)
             else:
                 response = requests.delete(url, headers=header)
 
