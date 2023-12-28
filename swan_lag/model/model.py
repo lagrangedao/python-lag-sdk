@@ -94,16 +94,6 @@ class SpaceDeploy:
         }
 
 
-class MachinesConfig:
-    def __init__(self, hardwares: list[Hardware]):
-        self.hardwares = hardwares
-
-    def to_dict(self):
-        return {
-            "hardwares": self.hardwares,
-        }
-
-
 class Hardware:
     def __init__(self, hardware_id: int, hardware_name: str, hardware_price: str, status: str, hardware_type: str,
                  description: str, region: list[str]):
@@ -125,3 +115,15 @@ class Hardware:
             "description": self.description,
             "region": self.region
         }
+
+
+class MachinesConfig:
+    def __init__(self, hardwares: list[Hardware]):
+        self.hardwares = hardwares
+
+    def to_dict(self):
+        return {
+            "hardwares": self.hardwares,
+        }
+
+
