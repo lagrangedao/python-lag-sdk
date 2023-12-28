@@ -10,6 +10,12 @@ DELETE = "DELETE"
 
 ## api
 API_KEY_LOGIN = "/login_by_api_key"
+
+CREATE_SPACE = '/spaces'
+SPACE_UPLOAD_FILE = '/spaces/<string:space_name>/files/upload'
+SPACE_DELETE_FILE = '/spaces/<string:space_name>/files/delete'
+GET_MACHINES_CONFIG = '/cp/machines'
+
 CREATE_SPACE_NFT_REQUEST = '/spaces/nft/request'
 CREATE_SPACE_LICENSE = '/spaces/create_license'
 CREATE_DATA_NFT_REQUEST = '/spaces/nft/request'
