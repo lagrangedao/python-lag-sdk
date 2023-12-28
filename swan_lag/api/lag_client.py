@@ -1,11 +1,11 @@
+import json
+import requests
+import time
+
 from swan_lag.api_client import APIClient
 from swan_lag.common.constants import *
-import logging
-import requests, time, json
-
-from swan_lag.model.model import CreateSpace
+from swan_lag.model.model import CreateSpaceParams, CreateSpaceResult, ResponseResult
 from swan_lag.service.lag_service import *
-from flask import jsonify
 
 
 class LagAPI(object):
@@ -288,15 +288,13 @@ class LagAPI(object):
         url = '/get_job_uri/' + space_uuid
         try:
             response = self.api_client._request_without_params(GET, url, self.api_client.LAG_API, self.token)
+
             return response
         except:
             logging.error("An error occurred while executing get_result_uri_from_space_uuid()")
             return None
 
-    def create_space(self, space: CreateSpace):
-        headers = {
-            "Authorization": "Bearer " + self.token
-        }
+    def create_space(self, space: CreateSpaceParams):
         data = {
             "name": space.name,
             "is_public": space.is_public,
@@ -308,7 +306,63 @@ class LagAPI(object):
         try:
             response = self.api_client._request_with_params(POST, CREATE_SPACE, self.api_client.LAG_API, data,
                                                             self.token, None)
+            if response is None:
+                return response
+            uuid = response['data']['space']['uuid']
+            name = response['data']['space']['name']
+            status_code = response['data']['space']['status_code']
+            created_at = response['data']['space']['created_at']
+            return CreateSpaceResult(uuid, name, status_code, created_at).to_json()
+        except Exception as e:
+            logging.error("An error occurred while executing create_space, error: {e}")
+            return None
+
+    def upload_or_update_file_to_space(self, space_name: str, base_dir=None, files=None):
+        if not base_dir and not files:
+            logging.error("Error: Neither base directory nor file paths provided.")
+            return
+
+        if base_dir:
+            files = files or []
+            files_in_base_dir = []
+            for root, dirs, files_list in os.walk(base_dir):
+                for file in files_list:
+                    file_path = os.path.join(root, file)
+                    files_in_base_dir.append(file_path)
+            files.extend(files_in_base_dir)
+
+        if not files:
+            print("Error: No files found for upload.")
+            return
+        # try:
+        response = self.api_client._request_with_params(POST, SPACE_UPLOAD_FILE % space_name, self.api_client.LAG_API,
+                                                        None, self.token, files)
+        return response
+        # except Exception as e:
+        #     logging.error("An error occurred while executing upload_file_to_space, error: {e}")
+        #     return None
+
+    def delete_space_files(self, space_name: str, filename=None):
+        if not filename:
+            logging.error("Error: no filename provided.")
+            return
+        data = {
+            'filename': filename,
+        }
+
+        try:
+            response = self.api_client._request_with_params(POST, SPACE_DELETE_FILE % space_name, self.api_client.LAG_API,
+                                                            data, self.token, None)
             return response
-        except:
-            logging.error("An error occurred while executing send_jobs()")
+        except Exception as e:
+            logging.error("An error occurred while executing upload_file_to_space, error: {e}")
+            return None
+
+    def get_machines(self):
+        try:
+            response = self.api_client._request_without_params(GET, GET_MACHINES_CONFIG, self.api_client.LAG_API,
+                                                               self.token)
+            return response
+        except Exception as e:
+            logging.error("An error occurred while executing upload_file_to_space, error: {e}")
             return None

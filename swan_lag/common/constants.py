@@ -1,4 +1,4 @@
-LAG_TESTNET_API = "https://test-api.lagrangedao.org"
+LAG_TESTNET_API = "http://test-lag-api.storefrontiers.cn"
 LAG_MAINNET_API = "https://api.lagrangedao.org"
 
 ## api method
@@ -12,8 +12,8 @@ DELETE = "DELETE"
 API_KEY_LOGIN = "/login_by_api_key"
 
 CREATE_SPACE = '/spaces'
-SPACE_UPLOAD_FILE = '/spaces/<string:space_name>/files/upload'
-SPACE_DELETE_FILE = '/spaces/<string:space_name>/files/delete'
+SPACE_UPLOAD_FILE = '/spaces/%s/files/upload'
+SPACE_DELETE_FILE = '/spaces/%s/files/delete'
 GET_MACHINES_CONFIG = '/cp/machines'
 
 CREATE_SPACE_NFT_REQUEST = '/spaces/nft/request'
