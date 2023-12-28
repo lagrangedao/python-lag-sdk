@@ -70,3 +70,9 @@ class APIClient(object):
 
     def _request_with_params(self, method, request_path, lag_api, params, token, files):
         return self._request(method, request_path, lag_api, params, token, files)
+    
+    def get_request(self, method_path, params=None):
+        return self._request(method_path, c.GET, self.LAG_API, params, self.token)
+    
+    def post_request(self, method_path, params=None):
+        return self._request(method_path, c.POST, self.LAG_API, params, self.token)
