@@ -24,3 +24,5 @@ CREATE_DATA_NFT_REQUEST = '/datasets/request_datanft'
 CREATE_DATASET_LICENSE = '/datasets/create_license'
 COPY_NFT_REQUEST = '/copynft/request'
 COPY_NFT_STATUS = '/copynft/status'
+
+STATUS_SUCCESS = "success"

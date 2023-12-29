@@ -76,3 +76,9 @@ class APIClient(object):
     
     def post_request(self, method_path, params=None):
         return self._request(method_path, c.POST, self.LAG_API, params, self.token)
+    
+    def put_request(self, method_path, params=None):
+        return self._request(method_path, c.PUT, self.LAG_API, params, self.token)
+    
+    def delete_request(self, method_path, params=None):
+        return self._request(method_path, c.DELETE, self.LAG_API, params, self.token)
