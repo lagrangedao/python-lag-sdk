@@ -106,6 +106,11 @@ class DeploymentRenewResult(JsonDictObject):
         self.job = jobs
 
 
+class DeploymentTask(JsonDictObject):
+    def __init__(self, task: Task = None):
+        self.task = task
+
+
 class_key_dict = {
     "activeOrder": Order,
     "config": Config,
