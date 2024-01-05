@@ -48,7 +48,7 @@ class Task(object):
 
 
 class Job(object):
-    def __init__(self, name:str =None, uuid: str = None, status: str = None, job_result_uri: str = None, bidder_id: str = None, build_log: str = None,container_log:str = None,duration: int = None, job_source_uri:str = None,storage_source: str = None,hardware: str = None,created_at: str = None,updated_at: str = None):
+    def __init__(self, name: str = None, uuid: str = None, status: str = None, job_result_uri: str = None, bidder_id: str = None, build_log: str = None, container_log: str = None, duration: int = None, job_source_uri: str = None, storage_source: str = None, hardware: str = None, created_at: str = None, updated_at: str = None):
         self.name = name
         self.uuid = uuid
         self.status = status
@@ -84,7 +84,7 @@ class Order(JsonDictObject):
 
 
 class Space(JsonDictObject):
-    def __init__(self, order: Order = None, name: str = None, uuid: str = None, is_public: bool = None, license: str = None, expiration_time: str = None, likes: int = None, forked_space_uuid: str = None):
+    def __init__(self, order: Order = None, name: str = None, uuid: str = None, is_public: bool = None, license: str = None, expiration_time: str = None, likes: int = None, forked_space_uuid: str = None, created_at: str = None, updated_at: str = None, task_uuid: str = None, last_stop_reason: str = None):
         self.activeOrder = order
         self.name = name
         self.uuid = uuid
@@ -93,6 +93,10 @@ class Space(JsonDictObject):
         self.expiration_time = expiration_time
         self.likes = likes
         self.forked_space_uuid = forked_space_uuid
+        self.created_at = created_at
+        self.updated_at = updated_at
+        self.task_uuid = task_uuid
+        self.last_stop_reason = last_stop_reason
 
 
 class SpaceDeployment(JsonDictObject):
@@ -101,8 +105,9 @@ class SpaceDeployment(JsonDictObject):
         self.job: list[Job] = jobs
         self.task: Task = task
 
+
 class DeploymentRenewResult(JsonDictObject):
-    def __init__(self,jobs: list[Job] = None):
+    def __init__(self, jobs: list[Job] = None):
         self.job = jobs
 
 

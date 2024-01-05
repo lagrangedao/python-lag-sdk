@@ -21,7 +21,6 @@ class DeploymentAPI(APIClient):
         self.account = self.api_client.account
         self.rpc = self.api_client.rpc
 
-
     def create_deployment(self, space_uuid: str, duration: int, paid, tx_hash: str, chain_id: str):
         response = self.api_client.post_request(METHOD_SPACE_DEPLOYMENT.format(space_uuid), {
             "duration": duration,
@@ -32,7 +31,6 @@ class DeploymentAPI(APIClient):
         result = DeploymentTask()
         message = self.parse_response_to_obj(response, result)
         return message, result.task
-
 
     def get_deployment(self, space_uuid: str) -> (str, SpaceDeployment):
         response = self.api_client.get_request(
@@ -68,7 +66,3 @@ class DeploymentAPI(APIClient):
             return 'response data missed'
         obj.parse_dict_to_obj(data)
         return STATUS_SUCCESS
-
-
-if __name__ == '__main__':
-    print("run test")
