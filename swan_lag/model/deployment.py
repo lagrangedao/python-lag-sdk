@@ -42,19 +42,23 @@ class Config(object):
 
 
 class Order(JsonDictObject):
-    def __init__(self, config: Config = None, duration: int = None, region: str = None):
+    def __init__(self, config: Config = None, duration: int = None, region: str = None, created_at: str = None, started_at: int = None, ended_at: int = None):
         self.config = config
         self.duration = duration
         self.region = region
+        self.created_at = created_at
+        self.started_at = started_at
+        self.ended_at = ended_at
 
 
 class Space(JsonDictObject):
-    def __init__(self, order: Order = None, name: str = None, uuid: str = None, is_public: bool = None, license: str = None, expiration_time: str = None, likes: int = None, forked_space_uuid: str = None, created_at: str = None, updated_at: str = None, task_uuid: str = None, last_stop_reason: str = None):
+    def __init__(self, order: Order = None, name: str = None, uuid: str = None, is_public: bool = None, license: str = None, status: str = None, expiration_time: str = None, likes: int = None, forked_space_uuid: str = None, created_at: str = None, updated_at: str = None, task_uuid: str = None, last_stop_reason: str = None):
         self.activeOrder = order
         self.name = name
         self.uuid = uuid
         self.is_public = is_public
         self.license = license
+        self.status = status
         self.expiration_time = expiration_time
         self.likes = likes
         self.forked_space_uuid = forked_space_uuid
@@ -95,7 +99,7 @@ class DeploymentPayment(JsonDictObject):
         self.denied_reason = denied_reason
         self.created_at = created_at
         self.updated_at = updated_at
-        self.end_at = ended_at
+        self.ended_at = ended_at
 
 
 class DeploymentPaymentsResult(JsonDictObject):
