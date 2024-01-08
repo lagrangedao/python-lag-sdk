@@ -46,6 +46,137 @@ res = lag_client.get_result_uri_from_space_uuid(space_uuid)
 
 ```
 
+### Space API
+
+#### General response
+
+generally, the API response contains one or two parameters, the first one is the status message, `success` means a successful response, and the second parameter (if has) is the last result. Otherwise, the message is the reason why it failed.
+
+#### Init Space client
+
+```json
+client =  APIClient("<YOUR_LAGRANGE_API_KEY>", <"YOUR_PRIVATE_KEY">, "<YOUR_MUMBAI_RPC>",True, True)
+space_client = SpaceAPI(api_client=client)
+```
+
+if you don't need the payment function, just use like below:
+
+```json
+space_client = SpaceAPI(api_key="<YOUR_LAGRANGE_API_KEY>", is_calibration=False)
+```
+
+#### Create Space
+
+```json
+msg, space = space_client.create_space("name", True, License.apache_2_0, SDK.Docker)
+```
+
+note: `space.uuid` is the most useful parameter and will be continuously used in the future
+
+#### Get Space
+
+```python
+msg, space = space_client.get_space("space_uuid")
+```
+
+if you want to get others public space, just use like below:
+
+```python
+msg, space = space_client.get_space("owner_address", "space_name")
+```
+
+#### Get Space List
+
+```python
+msg, spaces = space_client.get_space_list()
+```
+
+#### Update Space
+
+rename space or update space visibility for public
+
+```python
+msg, spaces = space_client.update_space("space_uuid","new-name", False)
+```
+
+#### Delete Space
+
+```python
+msg, spaces = space_client.delete_space("space_uuid")
+```
+
+#### Upload files to Space
+
+support files and folders, if the file name is the same as the previous one, just overwrite it
+
+```python
+msg = space_client.upload_space_files("space_uuid", ["files_path"])
+```
+
+#### Get Space files
+
+```python
+msg, files = space_client.get_space_files("space_uuid")
+```
+
+#### Delete file from Space
+
+```python
+msg, files = space_client.delete_space_file("space_uuid","file.name")
+```
+
+note: the `file.name` is the parameter `name` of the file from [Get Space files](#get-space-files)
+
+#### Get Machine Configs
+
+```python
+msg, configs = space_client.get_machine_configs()
+```
+
+#### Create space deployment
+
+```python
+msg, space_deployment = space_client.create_space_deployment("space_uuid", 3600, '0.0','tx_hash', '80001', 'C1ae.small', 'Global', 300)
+```
+
+note: the unit of `duration` and `start_in` is `second`
+
+#### Get space deployment
+
+```python
+msg, space_deployment = space_client.get_space_deployment("space_uuid")
+```
+
+#### Renew space deployment
+
+extend space deployment duration
+
+```python
+msg = space_client.renew_space_deployment("space_uuid", 3600, '0.0', 'tx_hash', '80001')
+```
+
+#### Terminate space deployment
+
+```python
+msg = space_client.terminate_space_deployment("space_uuid")
+```
+
+#### Get space deployment payments
+
+only for paid deployments
+
+```python
+msg = space_client.get_space_deployment_payments()
+```
+
+#### Space deployment payment claim review
+
+```python
+msg = space_client.claim_review('tx_hash', '80001')
+```
+
+#### 
+
 ## Contributing
 Guidelines for how others can contribute to the `python-lag-sdk` project. This section can include instructions on submitting issues, pull requests, and any coding standards or requirements.
 
