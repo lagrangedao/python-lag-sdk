@@ -67,6 +67,28 @@ class SpaceAPI(APIClient):
         message = self.parse_response_to_obj(response, deployment)
         return message, deployment
 
+    def update_space(self, space_uuid: str, new_name: str = None, is_public: bool = None) -> str:
+        if not new_name and is_public is None:
+            return "new_name or is_public is required"
+        data = {}
+        if new_name:
+            data["new_name"] = new_name
+        if is_public is not None:
+            public = 0
+            if is_public:
+                public = 1
+            data["is_public"] = public
+        response = self.api_client.put_request(
+            METHOD_SPACES_OPERATION.format(space_uuid), data)
+        message = self.parse_response_to_obj(response)
+        return message
+
+    def delete_space(self, space_uuid: str):
+        response = self.api_client.delete_request(
+            METHOD_SPACES_OPERATION.format(space_uuid))
+        message = self.parse_response_to_obj(response)
+        return message
+
     def get_space_list(self) -> (str, list[Space]):
         response = self.api_client.get_request(METHOD_PROFILE)
         result = Profile()
@@ -86,11 +108,8 @@ class SpaceAPI(APIClient):
                 parent_dirpath = path.removesuffix("/"+dirname)
             else:
                 parent_dirpath = os.path.dirname(path)
-            print("dirpath: {}".format(parent_dirpath))
             for (dir_path, dir_names, file_names) in os.walk(path):
-                print("dir_path: {}".format(dir_path))
                 relevant_dirname = dir_path.removeprefix(parent_dirpath+"/")
-                print("relevant_dirname: {}".format(relevant_dirname))
                 for filename in file_names:
                     file_relevant_path = relevant_dirname+'/'+filename
                     filepaths.append(file_relevant_path)
@@ -102,7 +121,8 @@ class SpaceAPI(APIClient):
 
             for filepath in filepaths:
                 print(f"upload file {filepath}")
-                files.append(("file", (filepath, open(parent_dirpath+'/'+filepath, 'rb'))))
+                files.append(
+                    ("file", (filepath, open(parent_dirpath+'/'+filepath, 'rb'))))
 
         response = self.api_client.post_request(
             METHOD_SPACES_FILES.format(space_uuid), files, files=True)
@@ -112,13 +132,13 @@ class SpaceAPI(APIClient):
     def get_space_files(self, space_uuid: str) -> (str, list[File]):
         response = self.api_client.get_request(
             METHOD_SPACES_FILES.format(space_uuid))
-        message, files  = self.parse_response_to_obj_list(response, File)
+        message, files = self.parse_response_to_obj_list(response, File)
         return message, files
 
     def delete_space_file(self, space_uuid: str, file_name) -> str:
         response = self.api_client.delete_request(METHOD_SPACES_FILES.format(space_uuid), {
             "filename": file_name
-        },json=True)
+        }, json=True)
         message = self.parse_response_to_obj(response)
         return message
 
@@ -138,12 +158,12 @@ class SpaceAPI(APIClient):
             return 'response data missed'
         obj.parse_dict_to_obj(data)
         return STATUS_SUCCESS
-    
-    def parse_response_to_obj_list(self, response, cls = None) -> (str, list[JsonDictObject]):
+
+    def parse_response_to_obj_list(self, response, cls=None) -> (str, list[JsonDictObject]):
         if response['status'] != STATUS_SUCCESS:
             return response['message'], None
         if cls is None:
-            return STATUS_SUCCESS,None
+            return STATUS_SUCCESS, None
         data = response['data']
         if not data:
             return 'response data missed', None
