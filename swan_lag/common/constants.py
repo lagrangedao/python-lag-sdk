@@ -1,4 +1,5 @@
-LAG_TESTNET_API = "https://test-api.lagrangedao.org"
+# LAG_TESTNET_API = "https://test-api.lagrangedao.org"
+LAG_TESTNET_API = "http://test-lag-api.storefrontiers.cn"
 LAG_MAINNET_API = "https://api.lagrangedao.org"
 
 ## api method
@@ -36,3 +37,5 @@ METHOD_SPACES_FILES = "/spaces/{}/files"
 METHOD_PROFILE = "/profile"
 METHOD_MACHINES = "/cp/machines"
 METHOD_SPACE_DEPLOYMENT = "/spaces/{}/deployment"
+METHOD_SPACE_PAYMENTS = "/user/space/payments"
+METHOD_CLAIM_REVIEW = "/claim_review"

@@ -81,8 +81,31 @@ class DeploymentTask(JsonDictObject):
         self.task = task
 
 
+class DeploymentPayment(JsonDictObject):
+    def __init__(self, id: int = None, space_uuid: str = None, amount: str = None, chain_id: int = None, transaction_hash: str = None, order: Order = None, status: str = None, refundable_amount: str = None, refund_reason: str = None, denied_reason: str = None, created_at: str = None, updated_at: str = None, ended_at: str = None):
+        self.id = id
+        self.space_uuid = space_uuid
+        self.amount = amount
+        self.chain_id = chain_id
+        self.transaction_hash = transaction_hash
+        self.order = order
+        self.status = status
+        self.refundable_amount = refundable_amount
+        self.refund_reason = refund_reason
+        self.denied_reason = denied_reason
+        self.created_at = created_at
+        self.updated_at = updated_at
+        self.end_at = ended_at
+
+
+class DeploymentPaymentsResult(JsonDictObject):
+    def __init__(self, payments: list[DeploymentPayment] = None):
+        self.payments = payments
+
+
 class_key_dict["activeOrder"] = Order
 class_key_dict["config"] = Config
 class_key_dict["space"] = Space
 class_key_dict["task"] = Task
 class_key_dict["job"] = Job
+class_key_dict["payments"] = DeploymentPayment
