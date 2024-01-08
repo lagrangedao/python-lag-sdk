@@ -54,20 +54,20 @@ generally, the API response contains one or two parameters, the first one is the
 
 #### Init Space client
 
-```json
+```python
 client =  APIClient("<YOUR_LAGRANGE_API_KEY>", <"YOUR_PRIVATE_KEY">, "<YOUR_MUMBAI_RPC>",True, True)
 space_client = SpaceAPI(api_client=client)
 ```
 
 if you don't need the payment function, just use like below:
 
-```json
+```python
 space_client = SpaceAPI(api_key="<YOUR_LAGRANGE_API_KEY>", is_calibration=False)
 ```
 
 #### Create Space
 
-```json
+```python
 msg, space = space_client.create_space("name", True, License.apache_2_0, SDK.Docker)
 ```
 
