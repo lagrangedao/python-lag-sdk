@@ -71,6 +71,8 @@ space_client = SpaceAPI(api_key="<YOUR_LAGRANGE_API_KEY>", is_calibration=False)
 msg, space = space_client.create_space("name", True, License.apache_2_0, SDK.Docker)
 ```
 
+references: [Space](API_Reference.md#space)
+
 note: `space.uuid` is the most useful parameter and will be continuously used in the future
 
 #### Get Space
@@ -85,24 +87,28 @@ if you want to get others public space, just use like below:
 msg, space = space_client.get_space("owner_address", "space_name")
 ```
 
+references: [Space](API_Reference.md#space)
+
 #### Get Space List
 
 ```python
 msg, spaces = space_client.get_space_list()
 ```
 
+references: [Space](API_Reference.md#space)
+
 #### Update Space
 
 rename space or update space visibility for public
 
 ```python
-msg, spaces = space_client.update_space("space_uuid","new-name", False)
+msg = space_client.update_space("space_uuid","new-name", False)
 ```
 
 #### Delete Space
 
 ```python
-msg, spaces = space_client.delete_space("space_uuid")
+msg = space_client.delete_space("space_uuid")
 ```
 
 #### Upload files to Space
@@ -119,10 +125,12 @@ msg = space_client.upload_space_files("space_uuid", ["files_path"])
 msg, files = space_client.get_space_files("space_uuid")
 ```
 
+references: [File](API_Reference.md#space-file)
+
 #### Delete file from Space
 
 ```python
-msg, files = space_client.delete_space_file("space_uuid","file.name")
+msg = space_client.delete_space_file("space_uuid","file.name")
 ```
 
 note: the `file.name` is the parameter `name` of the file from [Get Space files](#get-space-files)
@@ -133,13 +141,17 @@ note: the `file.name` is the parameter `name` of the file from [Get Space files]
 msg, configs = space_client.get_machine_configs()
 ```
 
+references: [Machine Config](API_Reference.md#machine-config)
+
 #### Create space deployment
 
 ```python
-msg, space_deployment = space_client.create_space_deployment("space_uuid", 3600, '0.0','tx_hash', '80001', 'C1ae.small', 'Global', 300)
+msg, task = space_client.create_space_deployment("space_uuid", 3600, '0.0','tx_hash', '80001', 'C1ae.small', 'Global', 300)
 ```
 
 note: the unit of `duration` and `start_in` is `second`
+
+references: [Deployment Task](API_Reference.md#deployment-task)
 
 #### Get space deployment
 
@@ -147,13 +159,17 @@ note: the unit of `duration` and `start_in` is `second`
 msg, space_deployment = space_client.get_space_deployment("space_uuid")
 ```
 
+references: [Space Deployment](API_Reference.md#space-deployment)
+
 #### Renew space deployment
 
 extend space deployment duration
 
 ```python
-msg = space_client.renew_space_deployment("space_uuid", 3600, '0.0', 'tx_hash', '80001')
+msg, jobs = space_client.renew_space_deployment("space_uuid", 3600, '0.0', 'tx_hash', '80001')
 ```
+
+references: [Deployment Job](API_Reference.md#deployment-job)
 
 #### Terminate space deployment
 
@@ -166,8 +182,10 @@ msg = space_client.terminate_space_deployment("space_uuid")
 only for paid deployments
 
 ```python
-msg = space_client.get_space_deployment_payments()
+msg, payments = space_client.get_space_deployment_payments()
 ```
+
+references: [Deployment Payment](API_Reference.md#deployment-payment)
 
 #### Space deployment payment claim review
 
