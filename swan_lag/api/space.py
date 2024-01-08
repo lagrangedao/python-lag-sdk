@@ -8,14 +8,6 @@ from swan_lag.model.space import *
 from swan_lag.common.constants import *
 from swan_lag.common.utils import *
 
-METHOD_SPACES = "/spaces"
-METHOD_SPACES_OPERATION = "/spaces/{}"
-METHOD_SPACES_FORK = "/spaces/{}/fork"
-METHOD_SPACES_PUBLIC = "/spaces/{}/{}"
-METHOD_SPACES_FILES = "/spaces/{}/files"
-METHOD_PROFILE = "/profile"
-METHOD_MACHINES = "/cp/machines"
-
 
 class SpaceAPI(APIClient):
     def __init__(self, api_key=None, is_calibration=False):
@@ -147,6 +139,45 @@ class SpaceAPI(APIClient):
         result = MachineResult()
         message = self.parse_response_to_obj(response, result)
         return message, result.hardware
+
+    def create_space_deployment(self, space_uuid: str, duration: int, paid: str, tx_hash: str, chain_id: str, cfg_name: str, region: str, start_in: int):
+        response = self.api_client.post_request(METHOD_SPACE_DEPLOYMENT.format(space_uuid), {
+            "space_uuid": space_uuid,
+            "duration": duration,
+            "paid":     paid,
+            "tx_hash": tx_hash,
+            "chain_id": chain_id,
+            "cfg_name": cfg_name,
+            "region": region,
+            "start_in": start_in
+        })
+        result = DeploymentTask()
+        message = self.parse_response_to_obj(response, result)
+        return message, result.task
+
+    def get_space_deployment(self, space_uuid: str) -> (str, SpaceDeployment):
+        response = self.api_client.get_request(
+            METHOD_SPACE_DEPLOYMENT.format(space_uuid))
+        deployment = SpaceDeployment()
+        message = self.parse_response_to_obj(response, deployment)
+        return message, deployment
+
+    def renew_space_deployment(self, space_uuid: str, duration: int, paid, tx_hash: str, chain_id: str) -> (str, list[Job]):
+        response = self.api_client.put_request(METHOD_SPACE_DEPLOYMENT.format(space_uuid), {
+            "duration": duration,
+            "paid":     paid,
+            "tx_hash": tx_hash,
+            "chain_id": chain_id,
+        })
+        result = DeploymentRenewResult()
+        message = self.parse_response_to_obj(response, result)
+        return message, result.job
+
+    def terminate_space_deployment(self, space_uuid: str) -> str:
+        response = self.api_client.delete_request(
+            METHOD_SPACE_DEPLOYMENT.format(space_uuid))
+        message = self.parse_response_to_obj(response)
+        return message
 
     def parse_response_to_obj(self, response, obj: JsonDictObject = None) -> str:
         if response['status'] != STATUS_SUCCESS:

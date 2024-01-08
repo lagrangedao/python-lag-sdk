@@ -26,3 +26,13 @@ COPY_NFT_REQUEST = '/copynft/request'
 COPY_NFT_STATUS = '/copynft/status'
 
 STATUS_SUCCESS = "success"
+
+# api methods
+METHOD_SPACES = "/spaces"
+METHOD_SPACES_OPERATION = "/spaces/{}"
+METHOD_SPACES_FORK = "/spaces/{}/fork"
+METHOD_SPACES_PUBLIC = "/spaces/{}/{}"
+METHOD_SPACES_FILES = "/spaces/{}/files"
+METHOD_PROFILE = "/profile"
+METHOD_MACHINES = "/cp/machines"
+METHOD_SPACE_DEPLOYMENT = "/spaces/{}/deployment"
