@@ -7,6 +7,7 @@ from swan_lag.model.deployment import *
 from swan_lag.model.space import *
 from swan_lag.common.constants import *
 from swan_lag.common.utils import *
+from swan_lag.common.enums import *
 
 
 class SpaceAPI(APIClient):
@@ -23,23 +24,21 @@ class SpaceAPI(APIClient):
         self.account = api_client.account
         self.rpc = api_client.rpc
 
-    def create_space(self, name: str, is_public: bool, license: str, sdk: str) -> (str, Space):
-        public = 0
-        if is_public:
-            public = 1
+    def create_space(self, name: str, is_public: bool, license: License, sdk: SDK) -> (str, Space):
+        public = 1 if is_public else 0
         response = self.api_client.post_request(METHOD_SPACES, {
             "name": name,
             "is_public": public,
-            "license": license,
-            "sdk": sdk,
+            "license": license.value,
+            "sdk": sdk.value,
         })
         result = Space()
         message = self.parse_response_to_obj(response, result)
         return message, result
 
-    def fork_space(self, space_uuid: str, name: bool) -> (str, Space):
+    def fork_space(self, space_uuid: str, new_name: str) -> (str, Space):
         response = self.api_client.post_request(METHOD_SPACES_FORK.format(space_uuid), {
-            "new_name": name,
+            "new_name": new_name,
         })
         result = Space()
         message = self.parse_response_to_obj(response, result)
@@ -66,9 +65,7 @@ class SpaceAPI(APIClient):
         if new_name:
             data["new_name"] = new_name
         if is_public is not None:
-            public = 0
-            if is_public:
-                public = 1
+            public = 1 if is_public else 0
             data["is_public"] = public
         response = self.api_client.put_request(
             METHOD_SPACES_OPERATION.format(space_uuid), data)
