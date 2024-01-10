@@ -4,12 +4,15 @@ from swan_lag.common.constants import STATUS_SUCCESS
 from swan_lag.config import *
 import logging
 import traceback
+import os
 
-with open("./swan_lag/contract/abi/SwanToken.json", "r") as f:
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(current_dir+ "/abi/SwanToken.json", "r") as f:
     swan_token_abi = f.read()
 f.close()
 
-with open("./swan_lag/contract/abi/SpaceHardware.json", "r") as pf:
+with open(current_dir+ "/abi/SpaceHardware.json", "r") as pf:
     payment_contract_abi = pf.read()
 pf.close()
 

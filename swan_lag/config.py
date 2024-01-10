@@ -1,5 +1,6 @@
 
 import tomllib
+import os
 
 
 class Chain(object):
@@ -16,9 +17,9 @@ class SDKEnv(object):
 ChainsSupported = dict[str, Chain]()
 Envs = dict[str, SDKEnv]()
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
-
-with open("./config.toml", "rb") as f:
+with open(current_dir+ "/config.toml", "rb") as f:
     data = tomllib.load(f)
     chain_data = data['chain']
     for name in chain_data:
