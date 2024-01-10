@@ -13,6 +13,7 @@ class APIClient(object):
         self.is_testnet = is_testnet
         self.LAG_API = Params(self.is_testnet).LAG_API
         self.account = None
+        self.private_key = private_key
         if private_key:
             self.account = Account.from_key(private_key)
         self.rpc = rpc
@@ -62,7 +63,7 @@ class APIClient(object):
                     response = requests.delete(url, data=params, headers=header)
             else:
                 response = requests.delete(url, headers=header)
-        print(f"{method} {url} Response: {response.content.decode()}")
+        # print(f"{method} {url} Response: {response.content.decode()}")
         # exception handle
         # if not str(response.status_code).startswith('2'):
         #     return None

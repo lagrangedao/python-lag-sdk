@@ -1,0 +1,21 @@
+[env]
+[env.calibration]
+token_contract_address = "0x3CF24790B3af64029564E81B67aF299dB83Fd9e3"
+payment_contract_address = "0x2108e71280b825131220cd710813c25874f0e718"
+
+[env.prod]
+token_contract_address = ""
+payment_contract_address = ""
+
+[chain]
+[chain.swan-testnet]
+id = 8598668088
+rpc = "https://rpc-testnet.swanchain.io"
+
+[chain.polygon-mumbai]
+id = 80001
+rpc = "https://rpc-mumbai.maticvigil.com"
+
+[chain.sepolia]
+id = 11155111
+rpc = "https://sepolia.etherscan.io"

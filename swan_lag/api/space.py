@@ -8,13 +8,18 @@ from swan_lag.model.space import *
 from swan_lag.common.constants import *
 from swan_lag.common.utils import *
 from swan_lag.common.enums import *
+from swan_lag.config import *
+from swan_lag.contract.payment import *
 
 
 class SpaceAPI(APIClient):
-    def __init__(self, api_key: str=None, is_calibration=False, api_client: APIClient=None):
+    def __init__(self, api_key: str = None, private_key=None, is_calibration=False, api_client: APIClient = None):
         if not api_client:
+            if not private_key:
+                logging.warning(
+                    "private_key is not set, payment relevant functions not work")
             api_client = APIClient(
-                api_key=api_key, is_testnet=is_calibration, login=False)
+                api_key=api_key, private_key=private_key, is_testnet=is_calibration, login=False)
         self.with_client(api_client)
 
     def with_client(self, api_client: APIClient):
@@ -23,6 +28,8 @@ class SpaceAPI(APIClient):
         self.token = api_client.token
         self.account = api_client.account
         self.rpc = api_client.rpc
+        self.private_key = api_client.private_key
+        self.is_calibration = api_client.is_testnet
 
     def create_space(self, name: str, is_public: bool, license: License, sdk: SDK) -> (str, Space):
         public = 1 if is_public else 0
@@ -44,12 +51,12 @@ class SpaceAPI(APIClient):
         message = self.parse_response_to_obj(response, result)
         return message, result
 
-    def get_space(self, space_uuid: str) -> (str, SpaceDeployment):
+    def get_space(self, space_uuid: str) -> (str, Space):
         response = self.api_client.get_request(
             METHOD_SPACES_OPERATION.format(space_uuid))
         deployment = SpaceDeployment()
         message = self.parse_response_to_obj(response, deployment)
-        return message, deployment
+        return message, deployment.space
 
     def get_public_space(self, wallet: str, space_name: str) -> (str, SpaceDeployment):
         response = self.api_client.get_request(
@@ -137,13 +144,25 @@ class SpaceAPI(APIClient):
         message = self.parse_response_to_obj(response, result)
         return message, result.hardware
 
-    def create_space_deployment(self, space_uuid: str, duration: int, paid: str, tx_hash: str, chain_id: str, cfg_name: str, region: str, start_in: int):
+    def get_supported_chains(self) -> dict[str, Chain]:
+        return ChainsSupported
+
+    def create_space_deployment(self, space_uuid: str, duration: int, cfg_id: int, region: str,  start_in: int, chain: Chain) -> (str, DeploymentTask):
+        if not self.private_key:
+            return 'private_key is required', None
+
+        message, cfg_name, paid, tx_hash = SwanContract(
+            chain, self.private_key, self.is_calibration).pay_approve(space_uuid, cfg_id, duration)
+        logging.info(
+            f"pay approve response: {message} {cfg_name} {paid} {tx_hash}")
+        if message != STATUS_SUCCESS:
+            return message, None
         response = self.api_client.post_request(METHOD_SPACE_DEPLOYMENT.format(space_uuid), {
             "space_uuid": space_uuid,
             "duration": duration,
             "paid":     paid,
             "tx_hash": tx_hash,
-            "chain_id": chain_id,
+            "chain_id": chain.id,
             "cfg_name": cfg_name,
             "region": region,
             "start_in": start_in
@@ -159,12 +178,27 @@ class SpaceAPI(APIClient):
         message = self.parse_response_to_obj(response, deployment)
         return message, deployment
 
-    def renew_space_deployment(self, space_uuid: str, duration: int, paid, tx_hash: str, chain_id: str) -> (str, list[Job]):
+    def renew_space_deployment(self, space_uuid: str, duration: int, chain: Chain) -> (str, list[Job]):
+        if not self.private_key:
+            return 'private_key is required', None
+
+        message, space = self.get_space(space_uuid)
+        if message != STATUS_SUCCESS:
+            return message, None
+        if space.status != STATUS_RUNNING:
+            return 'can not renew non-running space deployment', None
+        logging.info(f"hardware id: {space.activeOrder.config.hardware_id}")
+        message, cfg_name, paid, tx_hash = SwanContract(chain, self.private_key, self.is_calibration).pay_approve(
+            space_uuid, space.activeOrder.config.hardware_id, duration)
+        logging.info(
+            f"pay approve response: {message} {cfg_name} {paid} {tx_hash}")
+        if message != STATUS_SUCCESS:
+            return message, None
         response = self.api_client.put_request(METHOD_SPACE_DEPLOYMENT.format(space_uuid), {
             "duration": duration,
             "paid":     paid,
             "tx_hash": tx_hash,
-            "chain_id": chain_id,
+            "chain_id": chain.id,
         })
         result = DeploymentRenewResult()
         message = self.parse_response_to_obj(response, result)

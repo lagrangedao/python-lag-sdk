@@ -20,6 +20,7 @@ class MachineConfig(object):
     def __init__(self, id: int = None, name: str = None, price: str = None, typ: str = None, status: str = None, description: str = None, region: list[str] = None):
         self.hardware_id = id
         self.hardware_name = name
+        self.hardware_price = price
         self.hardware_type = typ
         self.hardware_status = status
         self.hardware_description = description
