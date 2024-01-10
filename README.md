@@ -15,36 +15,7 @@ Examples and code snippets showing how to use `python-lag-sdk`. This could inclu
 
 IMPORTANT, You should be able to get your private key from Metamask -> Account Details -> show private key
 
-THESE COMMANDS SHOULD BE RUN SEPERATELY, to allow for time in between them.
-
-```python
-# Example Python code showing how to use python-lag-sdk
-from swan_lag.api_client import APIClient
-from swan_lag.api.lag_client import LagAPI
-
-api_client = APIClient("<YOUR_LAGRANGE_API_KEY>", <"YOUR_PRIVATE_KEY">, "<YOUR_MUMBAI_RPC>",True, True)
-lag_client = LagAPI(api_client)
-
-#Workflow for creating a SpaceNFT:
-#This creates a request for the contract to create an NFT, this returns the tx_hash for requesting the nft
-res = lag_client.space_nft_request(chain_id,wallet_address,space_name)
-#This attempts to claim the space nft and if it is not possible it fails, this returns the tx_hash for claiming the nft, as well as the contract address for the nft
-res = lag_client.try_claim_space_nft(wallet_address,space_name)
-#Once the nft is claimed, we should be able to view it on the chain, which this function allows for. This function returns info in the form of a dictionary
-res = lag_client.get_space_nft_info(wallet_address,space_name)
-#Once the Nft is created, we should be able to create a license. Recipient is usually going to be the same as wallet_address. Contract address comes from try_claim_space_nft
-res = lag_client.create_space_license(wallet_address,space_name,contract_address,chain_id,recipient)
-
-#Workflow for creating a dataNFT, similar return values as SpaceNFT:
-res = lag_client.data_nft_request(chain_id,wallet_address,space_name)
-res = lag_client.try_claim_data_nft(wallet_address,space_name)
-res = lag_client.get_data_nft_info(wallet_address,space_name)
-res = lag_client.create_dataset_license(wallet_address,space_name,contract_address,chain_id,recipient)
-
-#Get_job_uri
-res = lag_client.get_result_uri_from_space_uuid(space_uuid)
-
-```
+THESE COMMANDS SHOULD BE RUN SEPARATELY, to allow for time in between them.
 
 ### Space API
 
@@ -55,15 +26,14 @@ generally, the API response contains one or two parameters, the first one is the
 #### Init Space client
 
 ```python
-client =  APIClient("<YOUR_LAGRANGE_API_KEY>", <"YOUR_PRIVATE_KEY">, "<YOUR_MUMBAI_RPC>",True, True)
-space_client = SpaceAPI(api_client=client)
+space_client = SpaceAPI(api_key="<YOUR_LAGRANGE_API_KEY>", private_key='', is_calibration=False)
 ```
 
-if you don't need the payment function, just use like below:
-
-```python
-space_client = SpaceAPI(api_key="<YOUR_LAGRANGE_API_KEY>", is_calibration=False)
-```
+| field          | type   | description                              |
+| -------------- | ------ | ---------------------------------------- |
+| api_key        | string | api token from lagrange profile settings |
+| private_key    | string | wallet private key, required for payment |
+| is_calibration | bool   | is calibration, default false            |
 
 #### Create Space
 
@@ -143,10 +113,21 @@ msg, configs = space_client.get_machine_configs()
 
 references: [Machine Config](API_Reference.md#machine-config)
 
-#### Create space deployment
+
+#### Get Supported Chains
 
 ```python
-msg, task = space_client.create_space_deployment("space_uuid", 3600, '0.0','tx_hash', '80001', 'C1ae.small', 'Global', 300)
+msg, chains = space_client.get_supported_chains()
+```
+
+references: [Chain](API_Reference.md#chain)
+
+#### Create space deployment
+
+select a machine config and a supported chain, pay for it and deploy the space deployment
+
+```python
+msg, task = space_client.create_space_deployment("space_uuid", 3600, machine_cfg_id, 'Global', 300, chain)
 ```
 
 note: the unit of `duration` and `start_in` is `second`
@@ -163,10 +144,10 @@ references: [Space Deployment](API_Reference.md#space-deployment)
 
 #### Renew space deployment
 
-extend space deployment duration
+extend space deployment duration after paying for it
 
 ```python
-msg, jobs = space_client.renew_space_deployment("space_uuid", 3600, '0.0', 'tx_hash', '80001')
+msg, jobs = space_client.renew_space_deployment("space_uuid", 3600, chain)
 ```
 
 references: [Deployment Job](API_Reference.md#deployment-job)
@@ -190,7 +171,37 @@ references: [Deployment Payment](API_Reference.md#deployment-payment)
 #### Space deployment payment claim review
 
 ```python
-msg = space_client.claim_review('tx_hash', '80001')
+msg = space_client.claim_review('tx_hash', 80001)
+```
+
+### NFT API
+```python
+# Example Python code showing how to use python-lag-sdk
+from swan_lag.api_client import APIClient
+from swan_lag.api.lag_client import LagAPI
+
+api_client = APIClient("<YOUR_LAGRANGE_API_KEY>", <"YOUR_PRIVATE_KEY">, "<YOUR_MUMBAI_RPC>",True, True)
+lag_client = LagAPI(api_client)
+
+#Workflow for creating a SpaceNFT:
+#This creates a request for the contract to create an NFT, this returns the tx_hash for requesting the nft
+res = lag_client.space_nft_request(chain_id,wallet_address,space_name)
+#This attempts to claim the space nft and if it is not possible it fails, this returns the tx_hash for claiming the nft, as well as the contract address for the nft
+res = lag_client.try_claim_space_nft(wallet_address,space_name)
+#Once the nft is claimed, we should be able to view it on the chain, which this function allows for. This function returns info in the form of a dictionary
+res = lag_client.get_space_nft_info(wallet_address,space_name)
+#Once the Nft is created, we should be able to create a license. Recipient is usually going to be the same as wallet_address. Contract address comes from try_claim_space_nft
+res = lag_client.create_space_license(wallet_address,space_name,contract_address,chain_id,recipient)
+
+#Workflow for creating a dataNFT, similar return values as SpaceNFT:
+res = lag_client.data_nft_request(chain_id,wallet_address,space_name)
+res = lag_client.try_claim_data_nft(wallet_address,space_name)
+res = lag_client.get_data_nft_info(wallet_address,space_name)
+res = lag_client.create_dataset_license(wallet_address,space_name,contract_address,chain_id,recipient)
+
+#Get_job_uri
+res = lag_client.get_result_uri_from_space_uuid(space_uuid)
+
 ```
 
 #### 

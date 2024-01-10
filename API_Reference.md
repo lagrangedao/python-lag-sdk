@@ -122,3 +122,10 @@
 | created_at        | string                     | created at unix string, unit: second    |
 | updated_at        | string                     | updated_at at unix string, unit: second |
 | ended_at          | string                     | ended_at at unix string, unit: second   |
+
+### [Chain](swan_lag/config.py#L5)
+
+| field | type   | description   |
+| ----- | ------ | ------------- |
+| id    | int    | chain id      |
+| rpc   | string | chain rpc url |
