@@ -1,0 +1,2 @@
+include swan_lag/contract/abi/*.json
+include swan_lag/*.toml
