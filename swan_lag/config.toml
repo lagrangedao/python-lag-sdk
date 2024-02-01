@@ -1,13 +1,17 @@
 [env]
 [env.calibration]
-token_contract_address = "0x3CF24790B3af64029564E81B67aF299dB83Fd9e3"
-payment_contract_address = "0x2108e71280b825131220cd710813c25874f0e718"
+token_contract_address = "0x91B25A65b295F0405552A4bbB77879ab5e38166c"
+payment_contract_address = "0xF0F98f476b1a5c1c6EA97eEb23d8796F553246d9"
 
 [env.prod]
 token_contract_address = ""
 payment_contract_address = ""
 
 [chain]
+[chain.swan-saturn]
+id = 2024
+rpc = "https://saturn-rpc.swanchain.io"
+
 [chain.swan-testnet]
 id = 8598668088
 rpc = "https://rpc-testnet.swanchain.io"

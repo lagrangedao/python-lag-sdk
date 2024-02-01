@@ -12,7 +12,7 @@ with open(current_dir+ "/abi/SwanToken.json", "r") as f:
     swan_token_abi = f.read()
 f.close()
 
-with open(current_dir+ "/abi/SpaceHardware.json", "r") as pf:
+with open(current_dir+ "/abi/SpacePaymentV6.json", "r") as pf:
     payment_contract_abi = pf.read()
 pf.close()
 
